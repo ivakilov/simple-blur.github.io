@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Video Blur</title>
+    <style>
+      .video-container {
+        display: flex;
+        align-items: center;
+
+        height: 480px;
+      }
+
+      .video-container video {
+        display: none;
+      }
+
+      .video-container canvas {
+        display: block;
+      }
+
+      .volume-meter {
+        width: 1%;
+        height: 100%; /* Совпадает с высотой видео и canvas */
+        background-color: #ccc;
+        border: 1px solid #373636;
+        display: flex;
+        align-items: flex-end;
+        margin-left: 0.1%; /* Отступ от canvas */
+      }
+
+      .volume-meter-bar {
+        width: 100%;
+        background-color: rgb(201, 109, 23);
+        height: 0;
+      }
+    </style>
+    
+  </head>
+  <body>
+    <div class="controls">
+      <button id="toggleVideo">Disable Video</button>
+      <button id="toggleAudio">Disable Audio</button>
+      <button id="toggleBlur">Disable Blur</button>
+    </div>
+
+    <div class="video-container">
+      <video id="video" autoplay></video>
+      <canvas id="canvas"></canvas>
+      <div id="volumeMeter" class="volume-meter">
+        <div id="volumeMeterBar" class="volume-meter-bar"></div>
+      </div>
+    </div>
+    <script src="functions.js"></script>
+    <script>
+      const chatElement = document.getElementById("chat");
+      const video = document.getElementById("video");
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+      const toggleVideoButton = document.getElementById("toggleVideo");
+      const toggleAudioButton = document.getElementById("toggleAudio");
+      const toggleBlurButton = document.getElementById("toggleBlur");
+
+      let stream;
+      let blurEnabled = true;
+      
+      Conversation();
+
+      function drawFrame() {
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        // Применение размытия ко всему холсту
+        if (blurEnabled) {
+          addBlur();
+        }
+
+        requestAnimationFrame(drawFrame);
+      }
+
+      toggleVideoButton.addEventListener("click", () => {
+        const videoTrack = stream.getVideoTracks()[0];
+        videoTrack.enabled = !videoTrack.enabled;
+        toggleVideoButton.textContent = videoTrack.enabled
+          ? "Disable Video"
+          : "Enable Video";
+      });
+
+      toggleAudioButton.addEventListener("click", () => {
+        const audioTrack = stream.getAudioTracks()[0];
+        audioTrack.enabled = !audioTrack.enabled;
+        toggleAudioButton.textContent = audioTrack.enabled
+          ? "Disable Audio"
+          : "Enable Audio";
+      });
+
+      toggleBlurButton.addEventListener("click", () => {
+        blurEnabled = !blurEnabled;
+        toggleBlurButton.textContent = blurEnabled
+          ? "Disable Blur"
+          : "Enable Blur";
+      });
+    </script>
+  </body>
+</html>
