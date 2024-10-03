@@ -52,7 +52,7 @@ function handleAudioData(audioData) {
   sendAudioToServer(audioData);
 }
 
-function addBlur() {
+function addBlur(X, Y) {
   // Применение размытия ко всему холсту
 
   ctx.filter = "blur(10px)";
@@ -60,8 +60,8 @@ function addBlur() {
 
 
   // Задаем размеры центральной области
-  const centerX = canvas.width / 2;
-  const centerY = canvas.height / 2;
+  // const centerX = canvas.width / 2;
+  // const centerY = canvas.height / 2;
   const width = 300; // Ширина центральной области
   const height = 300; // Высота центральной области
 
@@ -74,8 +74,9 @@ function addBlur() {
 
     // Обрезаем область центрального прямоугольника
     ctx.beginPath();
-    radius = height / 2 * (1 + 0.05 * i);
-    ctx.arc(centerX, centerY - height / 8, radius, 0, 2 * Math.PI, true);
+    radius = canvas.height / 4 * (1 + 0.05 * i);
+    // ctx.arc(centerX, centerY - height / 8, radius, 0, 2 * Math.PI, true);
+    ctx.arc(X, Y, radius, 0, 2 * Math.PI, true);
 
     ctx.clip();
 
@@ -93,8 +94,8 @@ function addBlur() {
 
   // Обрезаем область центрального круга
   ctx.beginPath();
-  radius = height / 2;
-  ctx.arc(centerX, centerY - height / 8, radius, 0, 2 * Math.PI, false);
+  radius = canvas.height / 4;
+  ctx.arc(X, Y, radius, 0, 2 * Math.PI, false);
   ctx.clip();
 
   // Отрисовка видео без размытия

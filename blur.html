@@ -46,13 +46,14 @@
     </div>
 
     <div class="video-container">
-      <video id="video" autoplay></video>
-      <canvas id="canvas"></canvas>
+      <video id="video" width="640" height="480"autoplay></video>
+      <canvas id="canvas" ></canvas>
       <div id="volumeMeter" class="volume-meter">
         <div id="volumeMeterBar" class="volume-meter-bar"></div>
       </div>
     </div>
     <script src="functions.js"></script>
+    <script src="clmtrackr.js"></script>
     <script>
       const chatElement = document.getElementById("chat");
       const video = document.getElementById("video");
@@ -62,6 +63,11 @@
       const toggleAudioButton = document.getElementById("toggleAudio");
       const toggleBlurButton = document.getElementById("toggleBlur");
 
+      // ctracker
+      const ctracker = new clm.tracker();
+      ctracker.init();
+      ctracker.start(video);
+
       let stream;
       let blurEnabled = true;
       
@@ -69,10 +75,17 @@
 
       function drawFrame() {
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-        // Применение размытия ко всему холсту
+        
+        // Применение размытие
         if (blurEnabled) {
-          addBlur();
+          var X = canvas.width / 2;
+          var Y = canvas.height / 2 - canvas.height / 8;
+          const positions = ctracker.getCurrentPosition();
+          if(positions){
+            X = (positions[27][0] + positions[32][0]) / 2;
+            Y = (positions[27][1] + positions[32][1] + positions[62][1]) / 3; 
+          }
+          addBlur(X, Y);
         }
 
         requestAnimationFrame(drawFrame);
