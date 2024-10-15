@@ -70,6 +70,8 @@
 
       let stream;
       let blurEnabled = true;
+      var lastDetectedX = canvas.width / 2;
+      var lastDetectedY = canvas.height / 2 - canvas.height / 8;
       
       Conversation();
 
@@ -83,9 +85,11 @@
           const positions = ctracker.getCurrentPosition();
           if(positions){
             X = (positions[27][0] + positions[32][0]) / 2;
-            Y = (positions[27][1] + positions[32][1] + positions[62][1]) / 3; 
+            Y = (positions[27][1] + positions[32][1] + positions[62][1]) / 3;
+            lastDetectedX = X;
+            lastDetectedY = Y;
           }
-          addBlur(X, Y);
+          addBlur(lastDetectedX, lastDetectedY);
         }
 
         requestAnimationFrame(drawFrame);
